@@ -1,0 +1,6 @@
+apiVersion: v2
+name: mysql
+description: MySQL for the WeatherApp auth service, on the official mysql image (replaces the Bitnami mysql chart used in 2021)
+type: application
+version: 1.0.0
+appVersion: "8.4.11"

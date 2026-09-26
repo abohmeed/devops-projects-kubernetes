@@ -1,0 +1,4 @@
+.env
+db-data/
+node_modules/
+__pycache__/

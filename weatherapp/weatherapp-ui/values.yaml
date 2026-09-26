@@ -1,0 +1,94 @@
+# Default values for weatherapp-ui.
+replicaCount: 2
+
+image:
+  # The image you built and pushed, e.g. --set image.repository=<registry>/weatherapp-ui
+  repository: weatherapp-ui
+  pullPolicy: IfNotPresent
+  # Overrides the image tag, whose default is the chart appVersion (S04 passes the commit SHA here).
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  automount: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext:
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+
+service:
+  type: LoadBalancer
+  port: 80
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+httpRoute:
+  enabled: false
+  annotations: {}
+  parentRefs:
+  - name: gateway
+    sectionName: http
+  hostnames:
+  - chart-example.local
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+
+resources: {}
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: http
+readinessProbe:
+  httpGet:
+    path: /health
+    port: http
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+volumes: []
+volumeMounts: []
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# Verifies login tokens. Must be the same value as the auth chart's jwtSecret. Pass with --set jwtSecret=...
+jwtSecret: ""
+
+# Where the other two releases are reachable (their Service names)
+authHost: weatherapp-auth
+authPort: 8080
+weatherHost: weatherapp-weather
+weatherPort: 5000

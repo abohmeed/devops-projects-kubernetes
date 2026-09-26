@@ -1,0 +1,105 @@
+# Default values for weatherapp-auth.
+replicaCount: 2
+
+image:
+  # The image you built and pushed, e.g. --set image.repository=<registry>/weatherapp-auth
+  repository: weatherapp-auth
+  pullPolicy: IfNotPresent
+  # Overrides the image tag, whose default is the chart appVersion (S04 passes the commit SHA here).
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  automount: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext:
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+httpRoute:
+  enabled: false
+  annotations: {}
+  parentRefs:
+  - name: gateway
+    sectionName: http
+  hostnames:
+  - chart-example.local
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+
+resources: {}
+
+# auth waits for MySQL before it listens (first start initialises the database),
+# so liveness only begins once this has passed (up to 5 minutes).
+startupProbe:
+  httpGet:
+    path: /
+    port: http
+  periodSeconds: 5
+  failureThreshold: 60
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+volumes: []
+volumeMounts: []
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# Signs login tokens. Must be the same value as the ui chart's jwtSecret. Pass with --set jwtSecret=...
+jwtSecret: ""
+
+# The MySQL sub-chart (charts/mysql, official mysql image). Pass the passwords with --set:
+#   --set mysql.auth.rootPassword=... --set mysql.auth.password=...
+mysql:
+  auth:
+    rootPassword: ""
+    database: auth
+    username: weatherapp
+    password: ""

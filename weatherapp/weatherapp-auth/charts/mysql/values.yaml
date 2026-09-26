@@ -1,0 +1,25 @@
+# Official image, MySQL 8.4 LTS, pinned to a patch tag.
+image:
+  repository: mysql
+  tag: "8.4.11"
+  pullPolicy: IfNotPresent
+
+# The parent chart (weatherapp-auth) sets these under `mysql.auth`.
+auth:
+  rootPassword: ""
+  database: auth
+  username: weatherapp
+  password: ""
+
+service:
+  port: 3306
+
+persistence:
+  # Empty uses the cluster's default StorageClass (gp3 via the EBS CSI driver on EKS).
+  storageClass: ""
+  size: 8Gi
+
+resources: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}
