@@ -1,0 +1,11 @@
+apiVersion: kubeadm.k8s.io/v1beta4
+kind: JoinConfiguration
+discovery:
+  bootstrapToken:
+    apiServerEndpoint: "PASTE-API-ENDPOINT:6443"      # from: sudo kubeadm token create --print-join-command
+    token: "PASTE-TOKEN"                              # the --token value
+    caCertHashes: ["sha256:PASTE-HASH"]               # the --discovery-token-ca-cert-hash value
+nodeRegistration:
+  kubeletExtraArgs:
+    - name: cloud-provider
+      value: external

@@ -1,0 +1,5 @@
+# Local provider cache and state. .terraform.lock.hcl is NOT ignored: it is committed.
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log

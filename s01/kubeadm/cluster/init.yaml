@@ -1,0 +1,19 @@
+apiVersion: kubeadm.k8s.io/v1beta4
+kind: InitConfiguration
+nodeRegistration:
+  kubeletExtraArgs:
+    - name: cloud-provider
+      value: external
+---
+apiVersion: kubeadm.k8s.io/v1beta4
+kind: ClusterConfiguration
+kubernetesVersion: v1.36.4
+clusterName: basic-cluster
+controlPlaneEndpoint: "PASTE-API-ENDPOINT:6443"   # terraform output -raw api_endpoint
+networking:
+  podSubnet: 192.168.0.0/16
+  serviceSubnet: 10.96.0.0/12
+controllerManager:
+  extraArgs:
+    - name: cloud-provider
+      value: external
