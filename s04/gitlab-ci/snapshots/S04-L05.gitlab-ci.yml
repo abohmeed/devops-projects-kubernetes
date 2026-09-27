@@ -1,0 +1,65 @@
+# End of "GitLab CI stage 1: Build and Push". check-access is gone (it proved the access path);
+# the .deploy template stays for the next lecture.
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+stages:
+  - build
+  - push
+
+.docker:
+  image: docker:29.8.1-cli
+  services:
+    - docker:29.8.1-dind
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+
+.deploy:
+  image:
+    name: amazon/aws-cli:2.37.4
+    entrypoint: [""]
+  id_tokens:
+    GITLAB_OIDC_TOKEN:
+      aud: https://gitlab.com
+  variables:
+    AWS_REGION: us-east-1
+    CLUSTER_NAME: basic-cluster
+    AWS_WEB_IDENTITY_TOKEN_FILE: /tmp/web-identity-token
+    AWS_ROLE_SESSION_NAME: gitlab-$CI_JOB_ID
+    HELM_VERSION: v4.3.0
+    HELM_SHA256: 86584a54def73570558f66f5111cc53dfed56689637ae32c1201205d494f54fb
+  before_script:
+    - echo "$GITLAB_OIDC_TOKEN" > "$AWS_WEB_IDENTITY_TOKEN_FILE"
+    - dnf install -y -q tar gzip
+    - curl -fsSL -o /tmp/helm.tar.gz "https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz"
+    - echo "${HELM_SHA256}  /tmp/helm.tar.gz" | sha256sum -c -
+    - tar -xzf /tmp/helm.tar.gz -C /tmp
+    - mv /tmp/linux-amd64/helm /usr/local/bin/helm
+    - aws eks update-kubeconfig --name "$CLUSTER_NAME" --region "$AWS_REGION" --alias "$CLUSTER_NAME"
+
+build:
+  extends: .docker
+  stage: build
+  script:
+    - docker build --tag weatherapp-auth auth
+    - docker build --tag weatherapp-ui UI
+    - docker build --tag weatherapp-weather weather
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+push:
+  extends: .docker
+  stage: push
+  script:
+    - echo "$DOCKERHUB_TOKEN" | docker login --username "$DOCKERHUB_USER" --password-stdin
+    - docker build --tag "$DOCKERHUB_USER/weatherapp-auth:$CI_COMMIT_SHORT_SHA" auth
+    - docker push "$DOCKERHUB_USER/weatherapp-auth:$CI_COMMIT_SHORT_SHA"
+    - docker build --tag "$DOCKERHUB_USER/weatherapp-ui:$CI_COMMIT_SHORT_SHA" UI
+    - docker push "$DOCKERHUB_USER/weatherapp-ui:$CI_COMMIT_SHORT_SHA"
+    - docker build --tag "$DOCKERHUB_USER/weatherapp-weather:$CI_COMMIT_SHORT_SHA" weather
+    - docker push "$DOCKERHUB_USER/weatherapp-weather:$CI_COMMIT_SHORT_SHA"
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH

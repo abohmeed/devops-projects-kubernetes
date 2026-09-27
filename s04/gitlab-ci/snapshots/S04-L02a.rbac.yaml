@@ -1,0 +1,54 @@
+# Who may the pipeline act as, and where? (state at the end of the any-Kubernetes lecture)
+# Two namespaces the pipeline deploys to, one namespace that holds the CI identity,
+# and one RoleBinding per target namespace granting Kubernetes' built-in "edit" role.
+# "edit" can manage Deployments, StatefulSets, Services, Secrets, PVCs and ServiceAccounts,
+# which is everything Helm needs for our charts. It cannot create namespaces, read other
+# namespaces, or change RBAC.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: staging
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: production
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cicd
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: gitlab-ci
+  namespace: cicd
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: cicd
+  namespace: staging
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: edit
+subjects:
+  - kind: ServiceAccount
+    name: gitlab-ci
+    namespace: cicd
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: cicd
+  namespace: production
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: edit
+subjects:
+  - kind: ServiceAccount
+    name: gitlab-ci
+    namespace: cicd

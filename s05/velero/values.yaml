@@ -1,0 +1,51 @@
+# Velero Helm values for the primary cluster (basic-cluster, us-east-1).
+# Chart: vmware-tanzu/velero 12.2.0
+# Replace <BUCKET> with your bucket name. No credentials live in this file:
+# Velero gets an IAM role through EKS Pod Identity.
+
+image:
+  repository: docker.io/velero/velero
+  tag: v1.18.3
+
+# The AWS plugin: talks to S3 for us.
+initContainers:
+  - name: velero-plugin-for-aws
+    image: velero/velero-plugin-for-aws:v1.14.3
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+      - mountPath: /target
+        name: plugins
+
+configuration:
+  backupStorageLocation:
+    - name: default
+      provider: aws
+      bucket: <BUCKET>
+      default: true
+      accessMode: ReadWrite
+      config:
+        region: us-east-1
+  # Use CSI snapshots (through the snapshot controller and the EBS CSI driver).
+  features: EnableCSI
+
+# We do not use Velero's own EBS snapshot plugin: the data mover copies the
+# volume data into the bucket instead, so no VolumeSnapshotLocation.
+snapshotsEnabled: false
+
+# The node agent runs the data mover, which copies snapshot data to S3.
+deployNodeAgent: true
+nodeAgent:
+  # Only needed for file-system backup, which we do not use.
+  disableHostPath: true
+
+# Pod Identity gives the velero-server service account its IAM role.
+credentials:
+  useSecret: false
+serviceAccount:
+  server:
+    name: velero-server
+
+# The chart's CRD-upgrade job pipes `velero install --crds-only` into kubectl; pin that kubectl to the course's version.
+kubectl:
+  image:
+    tag: v1.36.4

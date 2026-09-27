@@ -1,0 +1,40 @@
+# End of the "Preparing the GitLab CI/CD pipeline" lecture: no build, no deploy yet.
+# One job proves the pipeline can reach the cluster with no stored keys:
+# GitLab ID token -> AWS role -> EKS access entry -> Kubernetes group "cicd".
+
+.deploy:
+  image:
+    name: amazon/aws-cli:2.37.4
+    entrypoint: [""]
+  id_tokens:
+    GITLAB_OIDC_TOKEN:
+      aud: https://gitlab.com
+  variables:
+    AWS_REGION: us-east-1
+    CLUSTER_NAME: basic-cluster
+    AWS_WEB_IDENTITY_TOKEN_FILE: /tmp/web-identity-token
+    AWS_ROLE_SESSION_NAME: gitlab-$CI_JOB_ID
+    HELM_VERSION: v4.3.0
+    HELM_SHA256: 86584a54def73570558f66f5111cc53dfed56689637ae32c1201205d494f54fb
+  before_script:
+    - echo "$GITLAB_OIDC_TOKEN" > "$AWS_WEB_IDENTITY_TOKEN_FILE"
+    - dnf install -y -q tar gzip
+    - curl -fsSL -o /tmp/helm.tar.gz "https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz"
+    - echo "${HELM_SHA256}  /tmp/helm.tar.gz" | sha256sum -c -
+    - tar -xzf /tmp/helm.tar.gz -C /tmp
+    - mv /tmp/linux-amd64/helm /usr/local/bin/helm
+    - aws eks update-kubeconfig --name "$CLUSTER_NAME" --region "$AWS_REGION" --alias "$CLUSTER_NAME"
+
+check-access:
+  extends: .deploy
+  script:
+    - helm version
+    - helm list --namespace staging
+    - helm list --namespace production
+    - |
+      if helm list --namespace kube-system; then
+        echo "kube-system should be off limits to this pipeline"
+        exit 1
+      fi
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH

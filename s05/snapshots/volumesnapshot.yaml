@@ -1,0 +1,10 @@
+# A point-in-time snapshot of the MySQL volume of the WeatherApp.
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: mysql-snap-1
+  namespace: weatherapp
+spec:
+  volumeSnapshotClassName: ebs-snapclass
+  source:
+    persistentVolumeClaimName: data-weatherapp-auth-mysql-0

@@ -1,0 +1,22 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "VeleroPodsOnEKS",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "pods.eks.amazonaws.com"
+      },
+      "Action": [
+        "sts:AssumeRole",
+        "sts:TagSession"
+      ],
+      "Condition": {
+        "StringEquals": {
+          "aws:RequestTag/kubernetes-namespace": "velero",
+          "aws:RequestTag/kubernetes-service-account": "velero-server"
+        }
+      }
+    }
+  ]
+}

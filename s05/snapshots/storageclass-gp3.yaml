@@ -1,0 +1,16 @@
+# For reference only. On our EKS cluster the EBS CSI add-on already created
+# this class for us (defaultStorageClass.enabled: true), under this name.
+# Use this file on a cluster where the driver was installed without that
+# option. It is the same class, written out.
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ebs-csi-default-sc
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+provisioner: ebs.csi.aws.com
+parameters:
+  type: gp3
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+reclaimPolicy: Delete

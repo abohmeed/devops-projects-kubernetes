@@ -28,6 +28,10 @@
 | `s02/operators/kro/` | Build your own operator | The kro `ResourceGraphDefinition` and an instance of it (kro 0.9.4) |
 | `weatherapp/` | Section 3 (the Weather App) | The three services (Go, Node.js, Python), `compose.yaml` and the Helm chart, version 2.1.0 |
 | `handouts/s02/`, `handouts/s03/`, `handouts/s04/` | every updated lecture in Sections 2 to 4 | The written study companion for each lecture |
+| `s04/gitlab-ci/` | Section 4 (GitLab CI/CD) | The finished `.gitlab-ci.yml`, the CI RBAC, the IAM trust and deploy policies, and a README with every command. `snapshots/` holds the pipeline as it stands at the end of each lecture |
+| `s05/snapshots/` | EBS snapshots (1) and (2) | The snapshot add-on, the VolumeSnapshotClass, a snapshot, and a claim restored from it |
+| `s05/velero/`, `s05/cluster/` | Velero setup, same-cluster and disaster-recovery restores | Helm values, the IAM policy and trust policy for EKS Pod Identity, and the recovery cluster's eksctl config |
+| `handouts/s05/` | every updated lecture in Section 5 | The written study companion for each lecture |
 
 The kOps lecture needs no files: every command is in its handout, `handouts/s01/s01-l03.md`.
 

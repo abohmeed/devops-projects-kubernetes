@@ -1,0 +1,14 @@
+# Adds the CSI snapshot controller (and the VolumeSnapshot CRDs) to the
+# cluster from Section 1. Apply it BEFORE addons.yaml (the EBS CSI driver):
+# the driver only runs its snapshot sidecar when the snapshot API exists.
+#   eksctl create addon -f snapshot-addon.yaml
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: basic-cluster
+  region: us-east-1
+
+addons:
+  - name: snapshot-controller
+    version: v8.6.0-eksbuild.2

@@ -1,0 +1,22 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Federated": "arn:aws:iam::${ACCOUNT_ID}:oidc-provider/gitlab.com"
+      },
+      "Action": "sts:AssumeRoleWithWebIdentity",
+      "Condition": {
+        "StringEquals": {
+          "gitlab.com:aud": "https://gitlab.com",
+          "gitlab.com:project_id": "${GITLAB_PROJECT_ID}",
+          "gitlab.com:ref_protected": "true"
+        },
+        "StringLike": {
+          "gitlab.com:sub": "project_path:${GITLAB_PROJECT_PATH}:ref_type:*:ref:*"
+        }
+      }
+    }
+  ]
+}

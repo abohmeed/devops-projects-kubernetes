@@ -1,0 +1,21 @@
+# A new volume, created from the snapshot.
+# It uses the SAME NAME the MySQL StatefulSet expects for pod 0
+# (<claim template>-<pod name>), so the StatefulSet picks it up as its own
+# disk. Create it only after the old claim is gone and the StatefulSet is
+# scaled to zero.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-weatherapp-auth-mysql-0
+  namespace: weatherapp
+spec:
+  storageClassName: ebs-csi-default-sc
+  dataSource:
+    name: mysql-snap-1
+    kind: VolumeSnapshot
+    apiGroup: snapshot.storage.k8s.io
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 8Gi

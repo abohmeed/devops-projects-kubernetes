@@ -1,0 +1,34 @@
+# Optional: bring an EBS snapshot that was taken OUTSIDE Kubernetes
+# (console, AWS Backup, a script) into the cluster, so a claim can be
+# restored from it. Replace <SNAPSHOT_ID> with your snap-... id.
+#
+# The EBS CSI driver's AWS-managed policy (AmazonEBSCSIDriverPolicyV2) only
+# lets the driver use snapshots tagged ebs.csi.aws.com/cluster=true. Tag the
+# snapshot first, or the restore fails with an authorization error:
+#   aws ec2 create-tags --resources <SNAPSHOT_ID> \
+#     --tags Key=ebs.csi.aws.com/cluster,Value=true
+#
+# The snapshot must be in the cluster's Region.
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshotContent
+metadata:
+  name: imported-mysql-snap-content
+spec:
+  deletionPolicy: Retain
+  driver: ebs.csi.aws.com
+  source:
+    snapshotHandle: <SNAPSHOT_ID>
+  volumeSnapshotClassName: ebs-snapclass
+  volumeSnapshotRef:
+    name: imported-mysql-snap
+    namespace: weatherapp
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: imported-mysql-snap
+  namespace: weatherapp
+spec:
+  volumeSnapshotClassName: ebs-snapclass
+  source:
+    volumeSnapshotContentName: imported-mysql-snap-content

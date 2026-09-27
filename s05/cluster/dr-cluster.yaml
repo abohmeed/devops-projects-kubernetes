@@ -1,0 +1,32 @@
+# The disaster-recovery cluster: a second EKS cluster in a second Region.
+# Same shape as Section 1's cluster.yaml, plus the two storage add-ons, so
+# it has the same default StorageClass (ebs-csi-default-sc) as the primary.
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: dr-cluster
+  region: eu-west-1
+  version: "1.36"
+
+accessConfig:
+  authenticationMode: API
+  bootstrapClusterCreatorAdminPermissions: true
+
+addons:
+  - name: eks-pod-identity-agent
+    version: v1.3.10-eksbuild.3
+  - name: aws-ebs-csi-driver
+    version: v1.66.0-eksbuild.1
+    useDefaultPodIdentityAssociations: true
+    configurationValues: |-
+      defaultStorageClass:
+        enabled: true
+
+managedNodeGroups:
+  - name: ng-1
+    amiFamily: AmazonLinux2023
+    instanceType: t3.large
+    desiredCapacity: 2
+    minSize: 2
+    maxSize: 2

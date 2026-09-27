@@ -1,0 +1,13 @@
+# How snapshots of EBS CSI volumes are taken.
+# deletionPolicy: Delete means deleting a VolumeSnapshot also deletes the EBS
+# snapshot behind it, so nothing is left billing when you clean up.
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshotClass
+metadata:
+  name: ebs-snapclass
+  # The label tells Velero to use this class for EBS CSI volumes.
+  # (We add it when we set up Velero; plain snapshots work without it.)
+  labels:
+    velero.io/csi-volumesnapshot-class: "true"
+driver: ebs.csi.aws.com
+deletionPolicy: Delete

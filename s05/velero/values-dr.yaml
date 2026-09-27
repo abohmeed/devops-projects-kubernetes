@@ -1,0 +1,43 @@
+# Velero Helm values for the disaster-recovery cluster.
+# Same bucket, same Region setting (the bucket's Region, us-east-1), but the
+# backup location is READ-ONLY here: the DR cluster restores from the
+# primary's backups and can never overwrite or delete them.
+
+image:
+  repository: docker.io/velero/velero
+  tag: v1.18.3
+
+initContainers:
+  - name: velero-plugin-for-aws
+    image: velero/velero-plugin-for-aws:v1.14.3
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+      - mountPath: /target
+        name: plugins
+
+configuration:
+  backupStorageLocation:
+    - name: default
+      provider: aws
+      bucket: <BUCKET>
+      default: true
+      accessMode: ReadOnly
+      config:
+        region: us-east-1
+  features: EnableCSI
+
+snapshotsEnabled: false
+
+deployNodeAgent: true
+nodeAgent:
+  disableHostPath: true
+
+credentials:
+  useSecret: false
+serviceAccount:
+  server:
+    name: velero-server
+
+kubectl:
+  image:
+    tag: v1.36.4
