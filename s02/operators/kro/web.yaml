@@ -1,0 +1,7 @@
+apiVersion: kro.run/v1alpha1
+kind: NginxSite
+metadata:
+  name: web
+spec:
+  replicas: 4
+  message: "Hello from version 2"

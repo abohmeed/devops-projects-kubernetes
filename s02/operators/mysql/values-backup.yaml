@@ -1,0 +1,11 @@
+backup:
+  enabled: true
+  storages:
+    s3-us-east-1:
+      type: s3
+      verifyTLS: true
+      s3:
+        bucket: dop-mysql-backup-XXXXXXXX
+        prefix: shop
+        region: us-east-1
+        credentialsSecret: s3-backup-creds

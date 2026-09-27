@@ -1,0 +1,8 @@
+apiVersion: ps.percona.com/v1
+kind: PerconaServerMySQLRestore
+metadata:
+  name: restore1
+  namespace: ps
+spec:
+  clusterName: shop-ps-db
+  backupName: backup1

@@ -1,0 +1,63 @@
+apiVersion: kro.run/v1alpha1
+kind: ResourceGraphDefinition
+metadata:
+  name: nginxsite
+spec:
+  schema:
+    apiVersion: v1alpha1
+    kind: NginxSite
+    spec:
+      replicas: integer | default=2
+      message: string | default="Hello from kro"
+    status:
+      availableReplicas: ${deployment.status.availableReplicas}
+  resources:
+  - id: page
+    template:
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: ${schema.metadata.name}-page
+      data:
+        index.html: ${schema.spec.message}
+  - id: deployment
+    template:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: ${schema.metadata.name}
+      spec:
+        replicas: ${schema.spec.replicas}
+        selector:
+          matchLabels:
+            app: ${schema.metadata.name}
+        template:
+          metadata:
+            labels:
+              app: ${schema.metadata.name}
+            annotations:
+              site/message: ${schema.spec.message}   # a config change rolls the pods
+          spec:
+            containers:
+            - name: nginx
+              image: nginx:1.30.5-alpine
+              ports:
+              - containerPort: 80
+              volumeMounts:
+              - name: page
+                mountPath: /usr/share/nginx/html
+            volumes:
+            - name: page
+              configMap:
+                name: ${page.metadata.name}
+  - id: service
+    template:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: ${schema.metadata.name}
+      spec:
+        selector:
+          app: ${schema.metadata.name}
+        ports:
+        - port: 80

@@ -1,0 +1,9 @@
+apiVersion: web.devopsprojects.io/v1
+kind: NginxSite
+metadata:
+  labels:
+    app.kubernetes.io/name: nginx-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: nginxsite-sample
+spec:
+  message: "Hello from version 2"
