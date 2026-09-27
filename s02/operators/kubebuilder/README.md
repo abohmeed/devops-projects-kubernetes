@@ -1,4 +1,4 @@
-# nginx-operator (kubebuilder) — S02-L06
+# nginx-operator (kubebuilder): S02-L06
 
 This folder does not ship the whole generated project. It ships the three files the lecture
 edits; everything else comes from the scaffold commands below.

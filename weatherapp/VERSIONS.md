@@ -1,4 +1,4 @@
-# WeatherApp 2026 — version pins
+# WeatherApp 2026: version pins
 
 Every version was checked on 2026-09-26 against the source named in the row.
 Image tags were confirmed to exist on Docker Hub (`hub.docker.com/v2/repositories/library/<image>/tags/<tag>` → 200)
@@ -15,7 +15,7 @@ and were then pulled and run on the recording VM (`dop-rec`, Ubuntu 24.04 x86_64
 | MySQL | **8.4.11** (image `mysql:8.4.11`, official) | 8.4 is MySQL's LTS line. 8.4.12 is announced (release notes dated 2026-08-18) but **not yet on Docker Hub** (tag 404), so 8.4.11 is the newest pullable 8.4 patch | https://dev.mysql.com/doc/relnotes/mysql/8.4/en/ ; Docker Hub `library/mysql` tags |
 | Chart test pods | `busybox:1.38.0` | Replaces the unpinned `busybox` in the `helm create` test template | Docker Hub `library/busybox` tags |
 
-## Go modules (auth) — `auth/src/main/go.mod`, `go.sum`
+## Go modules (auth): `auth/src/main/go.mod`, `go.sum`
 
 | Module | Pin | Replaces (2021) | Source |
 |---|---|---|---|
@@ -23,11 +23,11 @@ and were then pulled and run on the recording VM (`dop-rec`, Ubuntu 24.04 x86_64
 | `github.com/gin-gonic/gin` | v1.12.0 | v1.7.7 | https://proxy.golang.org/github.com/gin-gonic/gin/@latest |
 | `github.com/gin-contrib/cors` | v1.7.9 | v1.3.1 | https://proxy.golang.org/github.com/gin-contrib/cors/@latest |
 | `github.com/go-sql-driver/mysql` | v1.10.1 | v1.6.0 | https://proxy.golang.org/github.com/go-sql-driver/mysql/@latest |
-| `golang.org/x/crypto` (bcrypt) | v0.57.0 | — (new: replaces MD5 password hashing) | resolved by `go get golang.org/x/crypto@latest` |
+| `golang.org/x/crypto` (bcrypt) | v0.57.0 | N/A (new: replaces MD5 password hashing) | resolved by `go get golang.org/x/crypto@latest` |
 
 Indirect modules are fixed by `go.sum` (generated with `go mod tidy` under Go 1.27.1; `go vet ./...` clean).
 
-## npm packages (UI) — `UI/package.json` (exact pins) and `UI/package-lock.json`
+## npm packages (UI): `UI/package.json` (exact pins) and `UI/package-lock.json`
 
 | Package | Pin | 2021 | Source |
 |---|---|---|---|
@@ -39,7 +39,7 @@ Indirect modules are fixed by `go.sum` (generated with `go mod tidy` under Go 1.
 Dropped: `body-parser` (built into Express 5 as `express.urlencoded`), `ejs` (never rendered anything), `path` (an npm polyfill of Node's built-in module).
 `npm audit --omit=dev` on 2026-09-26: 0 vulnerabilities (97 packages).
 
-## Python packages (weather) — `weather/requirements.txt`
+## Python packages (weather): `weather/requirements.txt`
 
 Every package is pinned, direct and transitive; `pip freeze` in a clean `python:3.13.15-slim-trixie`
 container returns exactly these 15 lines, and `pip check` reports no broken requirements.
