@@ -20,7 +20,7 @@
 | `s01/kubeadm/terraform/` | kubeadm (2): Terraform infrastructure | VPC, subnets, security groups, the API load balancer, launch templates, and IAM for the AWS cloud controller. `.terraform.lock.hcl` is committed |
 | `s01/kubeadm/cluster/` | kubeadm (3): init, CNI and the AWS cloud controller | `init.yaml` and `join.yaml` (kubeadm `v1beta4`, `cloud-provider: external`) |
 | `handouts/s01/` | every Section 1 lecture | The written study companion for each lecture |
-| `s02/kustomize/` | App provisioning using Kustomize | A base and three overlays (dev, qa, production) |
+| `s02/kustomize/` | App provisioning using Kustomize | A base and three overlays (`dev`, `qa`, `prod`) |
 | `s02/helm/hello-chart/` | Helm: writing a chart | The chart written in the lecture |
 | `s02/blue-green/blue-green/` | Blue/Green deployments using Helm | A chart that runs blue and green side by side and switches traffic with one value |
 | `s02/operators/kubebuilder/` | Operator tooling in 2026 | The `NginxSite` API type, its controller and a sample, as written in the lecture (kubebuilder 4.16) |
