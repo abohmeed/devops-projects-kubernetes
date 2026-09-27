@@ -1,0 +1,4 @@
+replicaCount: 1
+environment:
+  - name: WHOAMI_NAME
+    value: dev

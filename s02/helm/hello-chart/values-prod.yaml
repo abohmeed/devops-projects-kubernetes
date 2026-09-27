@@ -1,0 +1,4 @@
+replicaCount: 2
+environment:
+  - name: WHOAMI_NAME
+    value: prod
