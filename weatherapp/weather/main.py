@@ -25,7 +25,7 @@ from flask_cors import CORS
 
 from symbols import SYMBOLS
 
-VERSION = "3.0.0"
+VERSION = "3.1.0"
 MET_URL = "https://api.met.no/weatherapi/locationforecast/2.0/compact"
 ATTRIBUTION = "Weather data from MET Norway (CC BY 4.0). Places from GeoNames (CC BY 4.0)."
 

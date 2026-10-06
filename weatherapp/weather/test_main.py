@@ -72,7 +72,7 @@ def test_london_is_the_biggest_london(client):
     assert "MET Norway" in body["source"]
     params = get.call_args.kwargs["params"]
     assert params == {"lat": "51.5085", "lon": "-0.1257"}
-    assert get.call_args.kwargs["headers"]["User-Agent"] == "weatherapp/3.0.0 student@example.com"
+    assert get.call_args.kwargs["headers"]["User-Agent"] == "weatherapp/3.1.0 student@example.com"
 
 
 def test_ascii_name_matches(client):

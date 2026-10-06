@@ -57,7 +57,7 @@ container returns exactly these 15 lines, and `pip check` reports no broken requ
 
 Source for each: `https://pypi.org/pypi/<name>/json` (`info.version`), 2026-09-26.
 
-## Weather data sources (v3.0.0, checked 2026-10-06)
+## Weather data sources (v3.1.0, checked 2026-10-06)
 
 | What | Pin | Licence | Source |
 |---|---|---|---|

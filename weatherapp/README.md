@@ -1,4 +1,4 @@
-# WeatherApp (2026 rebuild, v3.0.0)
+# WeatherApp (2026 rebuild, v3.1.0)
 
 The sample application used across the course: Section 3 builds and runs it in containers, with
 Docker Compose and with Helm; Section 4's GitLab pipeline builds and deploys it; Section 5 backs up
@@ -112,18 +112,20 @@ What the auth release creates for MySQL (the same names the 2021 Bitnami chart p
 - The app logs in to MySQL as its own user (`weatherapp`, rights on the `auth` database only), not as root.
   MySQL creates the database and user on first start (`MYSQL_DATABASE`, `MYSQL_USER`, `MYSQL_PASSWORD`).
 
-**Weather data (v3.0.0, 2026-10-06): no API key, no trial, no sign-up**
+**Weather data (v3.1.0, 2026-10-06): no API key, no trial, no sign-up**
 - v2.1.0 called WeatherAPI.com with a personal key. That key came from a free trial that expires, so a
   student following the course a year later would hit a dead end, exactly what broke the 2021 app
-  (it used RapidAPI). v3.0.0 needs no key from anyone.
+  (it used RapidAPI). v3.1.0 needs no key from anyone.
 - The city is looked up in `weather/cities.csv`, built into the image: every city with at least 100,000
   people from [GeoNames](https://www.geonames.org/) (6,279 rows, CC BY 4.0). A name that several cities
   share gives the most populous one (London, United Kingdom).
 - The weather comes from MET Norway's free [Locationforecast 2.0](https://api.met.no/weatherapi/locationforecast/2.0/documentation)
   API (data CC BY 4.0, commercial use allowed). Its [terms](https://api.met.no/doc/TermsOfService) ask every
   app to identify itself in the User-Agent with a way to contact it, so the service sends
-  `weatherapp/3.0.0 <WEATHER_CONTACT>`, and it keeps each forecast until the `Expires` time MET Norway sends
+  `weatherapp/3.1.0 <WEATHER_CONTACT>`, and it keeps each forecast until the `Expires` time MET Norway sends
   (no repeat calls inside that window).
+- Version: 3.1.0, not 3.0.0, because the Docker Hub tag `afakharany/weatherapp-ui:3.0.0` already
+  holds an older 2023 image that something may still pull; the course never overwrites a live tag.
 - The JSON keeps the fields the UI reads (`location.name`, `location.country`, `current.temp_c`,
   `current.temp_f`, `current.feelslike_c`, `current.feelslike_f`, `current.condition.text`, `.icon`), plus
   `source`, the attribution the UI shows under the result. "Feels like" is the apparent temperature
@@ -151,7 +153,7 @@ What the auth release creates for MySQL (the same names the 2021 Bitnami chart p
 **Helm**
 - Charts regenerated with Helm 4.3.0's `helm create` and the 2021 changes re-applied: `values.yaml`
   image and service settings, `env` in `deployment.yaml`, UI Service `type: LoadBalancer` on port 80.
-  (v2.1.0 also had a weather `secret.yaml` for the API key; v3.0.0 has no key, so it is gone.)
+  (v2.1.0 also had a weather `secret.yaml` for the API key; v3.1.0 has no key, so it is gone.)
 - The Bitnami `mysql` dependency is gone (its chart version and images no longer exist). MySQL is a small
   chart of our own in `weatherapp-auth/charts/mysql`, on the official image, keeping Bitnami's object and
   secret-key names (table above) and the `mysql.auth.rootPassword` value.
