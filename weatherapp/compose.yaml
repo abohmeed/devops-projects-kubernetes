@@ -53,7 +53,7 @@ services:
     restart: unless-stopped
     environment:
       # Empty is allowed: the service starts and answers weather requests with a clear error.
-      WEATHER_API_KEY: ${WEATHER_API_KEY:-}
+      WEATHER_CONTACT: ${WEATHER_CONTACT:-}
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/', timeout=2)"]
       interval: 5s

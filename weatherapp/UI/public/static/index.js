@@ -15,12 +15,13 @@ $(document).ready(() => {
             url: '/weather/' + encodeURIComponent(city),
             success: function (result){
                 $('#result').show()
-                $('#weather_icon').attr("src","https:" + result.current.condition.icon)
+                $('#weather_icon').attr("src", result.current.condition.icon)
                 $('#weather_text').html(result.current.condition.text)
                 $('#city_name').html(result.location.name)
                 $('#country_name').html(result.location.country)
                 $('#temp').html(result.current.temp_c + "&deg;C&nbsp;-&nbsp;" + result.current.temp_f + "&deg;F")
                 $('#feels_like').html(result.current.feelslike_c + "&deg;C&nbsp;-&nbsp;" + result.current.feelslike_f + "&deg;F")
+                $('#source').text(result.source)
             },
             error: function (xhr){
                 var msg = (xhr.responseJSON && xhr.responseJSON.error) || "Could not get the weather"

@@ -15,7 +15,7 @@
 #   JWT_SECRET        protected, masked+hidden  openssl rand -hex 32
 #   DB_ROOT_PASSWORD  protected, masked+hidden  openssl rand -hex 16
 #   DB_PASSWORD       protected, masked+hidden  openssl rand -hex 16
-#   WEATHER_API_KEY   protected, masked+hidden  your WeatherAPI.com key
+#   WEATHER_CONTACT   protected, visible        your email address or project link (not a secret)
 # Protected variables only reach pipelines on protected branches and protected tags,
 # so main is protected (the default) and tags are protected with the pattern "*".
 
@@ -79,7 +79,7 @@ stages:
       --namespace "$NAMESPACE"
       --set image.repository="$DOCKERHUB_USER/weatherapp-weather"
       --set image.tag="$IMAGE_TAG"
-      --set apikey="$WEATHER_API_KEY"
+      --set contact="$WEATHER_CONTACT"
       --wait --rollback-on-failure --timeout 5m
     - >
       helm upgrade --install weatherapp-ui ./weatherapp-ui

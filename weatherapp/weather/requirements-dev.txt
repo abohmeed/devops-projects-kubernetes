@@ -1,0 +1,2 @@
+# Test-only dependencies (not in the image)
+pytest==9.1.1

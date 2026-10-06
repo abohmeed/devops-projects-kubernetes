@@ -57,6 +57,15 @@ container returns exactly these 15 lines, and `pip check` reports no broken requ
 
 Source for each: `https://pypi.org/pypi/<name>/json` (`info.version`), 2026-09-26.
 
+## Weather data sources (v3.0.0, checked 2026-10-06)
+
+| What | Pin | Licence | Source |
+|---|---|---|---|
+| Forecast API | MET Norway Locationforecast **2.0** `compact` (answers 200, not the 203 that marks a deprecated version) | data CC BY 4.0, commercial use allowed, User-Agent with contact required | https://api.met.no/weatherapi/locationforecast/2.0/documentation ; https://api.met.no/doc/TermsOfService ; https://api.met.no/doc/License |
+| City table | GeoNames `cities15000.txt` + `countryInfo.txt`, downloaded 2026-10-06, filtered to population >= 100,000 (6,279 rows), sorted by population | CC BY 4.0 | https://download.geonames.org/export/dump/ |
+| Symbol texts and icons | metno/weathericons commit `89e3173756248b4696b9b10677b66c4ef435db53` (`weather/legend.csv`, `weather/svg/*.svg`) | MIT | https://github.com/metno/weathericons |
+| pytest (tests only, not in the image) | 9.1.1 | MIT | https://pypi.org/pypi/pytest/json |
+
 ## Tooling used to verify (on `dop-rec`)
 
 | Tool | Pin | How installed | Source |

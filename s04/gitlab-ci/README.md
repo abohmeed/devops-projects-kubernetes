@@ -103,7 +103,7 @@ which is why AWS and GitLab both recommend adding it.
 | `JWT_SECRET` | output of `openssl rand -hex 32` | yes | Masked and hidden |
 | `DB_ROOT_PASSWORD` | output of `openssl rand -hex 16` | yes | Masked and hidden |
 | `DB_PASSWORD` | output of `openssl rand -hex 16` | yes | Masked and hidden |
-| `WEATHER_API_KEY` | your WeatherAPI.com key | yes | Masked and hidden |
+| `WEATHER_CONTACT` | your email address or a link to your project (MET Norway asks every app for one; not a secret) | yes | Visible |
 
 Keep `JWT_SECRET`, `DB_ROOT_PASSWORD` and `DB_PASSWORD` for the life of the deployment: MySQL reads its passwords
 only the first time it starts, so changing them later locks the app out of its own database.

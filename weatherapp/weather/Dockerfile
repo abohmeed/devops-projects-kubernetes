@@ -3,7 +3,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 WORKDIR /app
 COPY requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt && pip check
-COPY main.py .
+COPY main.py symbols.py cities.csv ./
 RUN useradd --uid 10001 --no-create-home app
 USER 10001
 EXPOSE 5000

@@ -2,3 +2,7 @@
 **/.venv
 **/.env
 Dockerfile
+test_main.py
+requirements-dev.txt
+__pycache__/
+.pytest_cache/

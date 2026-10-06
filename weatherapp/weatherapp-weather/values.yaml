@@ -84,5 +84,6 @@ nodeSelector: {}
 tolerations: []
 affinity: {}
 
-# Your WeatherAPI.com key. Pass with --set apikey=... (empty: the service runs and reports the missing key).
-apikey: ""
+# How MET Norway can reach you: an email address or a URL. Not a secret.
+# Pass with --set contact=... (empty: the service runs and reports the missing contact).
+contact: ""
